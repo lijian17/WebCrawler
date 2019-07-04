@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 
 // 静态文件路径设置
-app.use('/static', express.static('static'));
+app.use('/static', express.static(__dirname + '/static'));
 
 // 主页输出 "Hello World"
 app.get('/', function(req, res){
