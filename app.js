@@ -82,49 +82,18 @@ app.get('/weixin', function(req, res, next) {
 		});
 });
 
-//// 需要提交的数据
-//var data = {
-//	
-//};
-//
-//var content = querystring.stringify(data);
-//
-//// 请求
-//var options = {
-//	hostname: 'https://mp.weixin.qq.com',
-//	port: 80,
-//	path: '/cgi-bin/appmsg?' + content,
-//	method: 'GET'
-//};
-//
-//var req = http.request(options, function(res) {
-//	console.log('STATUS: ' + res.statusCode);
-//	console.log('HEADERS: ' + JSON.stringify(res.headers));
-//	res.setEncoding('utf8');
-//	res.on('data', function(chunk) {
-//		console.log('BODY: ' + chunk);
-//	});
-//});
-//
-//req.on('error', function(e) {
-//	console.log('problem with request: ' + e.message);
-//});
-//
-//req.end();
-
-// 微信爬虫
-app.get('/wx', function(req, res, next) {
+var getWeixinList = function(begin, callback){
 	var url = 'https://mp.weixin.qq.com/cgi-bin/appmsg?token=2052806918&lang=zh_CN&f=json&ajax=1&random=0.7998929288148617&action=list_ex&begin=0&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
-	var hostname = 'https://mp.weixin.qq.com';
-	var path = '/cgi-bin/appmsg?token=2052806918&lang=zh_CN&f=json&ajax=1&random=0.7998929288148617&action=list_ex&begin=0&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
+	var hostname = 'mp.weixin.qq.com';
+	var path = '/cgi-bin/appmsg?token=149910836&lang=zh_CN&f=json&ajax=1&random=0.8699264633810757&action=list_ex&begin='+ begin +'&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
 	var option = {
-		hostname: hostname,
+		hostname: 'mp.weixin.qq.com',
 		path: path,
 		headers: {
-			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
-			"Host": "mp.weixin.qq.com",
-			"Referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=10&isMul=1&isNew=1&lang=zh_CN&token=2137494705",
-			"Cookie": "pgv_pvid=9290460692; pgv_pvi=9613647872; ua_id=NJPiozYEeMSChFG0AAAAABR7pnosN-xmPSiM0Gym4Xg=; ts_uid=589866628; pt2gguin=o0374452668; RK=nYQhC8zlNr; ptcz=c76646d6ce5a0fb11009f4a6f33407e98950d97df82c0a4beeaed95c5c779e0c; noticeLoginFlag=1; mm_lang=zh_CN; o_cookie=374452668; pac_uid=1_374452668; rewardsn=; wxtokenkey=777; pgv_si=s269601792; cert=VAwe1H9YD8xusNzXyp4WsreJVmJcYL55; remember_acct=c54dxs%40163.com; uuid=9a283efd162b7328fbcf6d67128e20e5; ticket=720d9de6348aab86d5c25411d61edd27466deebd; ticket_id=gh_a2f9f4eb3766; data_bizuin=2398370484; bizuin=2398371314; data_ticket=+3lkIqn9FJc2My4GBbfg4DhGUynVEjJzUWrSxspylN8eQTOHP7g3JaUwMmxDhu3s; slave_sid=QktFRUVQcHlCdmM0R0R0SUhwRnVUTWdUWkNlU2xYc0RRU0ZJMkMyM0tRTGdzNzJNMk1jMjNvRnJRM055SnpLN3lIc0NjTTJpcHFZd2M2bUFLcGpvRHBuUHptZHhHVjZjN185bFVGV2hRYzhTdURXWTVGbDN3QThOVnl5WDhFSFEyNU81NjBaUjl3ZUpuaXNY; slave_user=gh_a2f9f4eb3766; xid=b93c71810863e9396d7e48e0607276f4; openid2ticket_otDr0jlpT8m__Hae_7qI1d_3iy-4=6yoAsJXuQ6vpgTS2DsjuisFoYkkJFDEr6BgKRsin8A8="
+			"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+			"host": "mp.weixin.qq.com",
+			"referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=10&isMul=1&isNew=1&lang=zh_CN&token=149910836",
+			"cookie": "RK=cQVjT+zMcr; pgv_pvi=8529025024; tvfe_boss_uuid=d6881ac330f75442; ts_uid=5065673543; ua_id=7ZofPklMEuUns7x5AAAAACIAT90E2NToqpBzgDvSe8o=; pgv_pvid=4301079240; ptcz=6ea1f4cdf1eaa13248dbbdf027662fae2ff03e43df172559e4e4a01f3d5794dd; mm_lang=zh_CN; qb_qua=; qb_guid=81fb8423fe034e4f8211d2af13129866; Q-H5-GUID=81fb8423fe034e4f8211d2af13129866; NetType=; o_cookie=374452668; pac_uid=1_374452668; noticeLoginFlag=1; openid2ticket_otDr0jlpT8m__Hae_7qI1d_3iy-4=CabEVpTPnGyMM3GGCJa2kOTn2tMrMaUyoJlH5E1jmps=; remember_acct=913735050%40qq.com; openid2ticket_oLMz854x7C6AgL995qqa_JRlv03w=S6Rj03P/okk8o8CwCln73CrwGVwN6ekUvClp+HSuqWw=; pgv_si=s8812719104; uuid=cad67fe41f6bc61dab704a9cab8b5611; data_bizuin=2398370484; bizuin=2398371314; data_ticket=HCsb0M2qgTq8MbQx56bChBwDYUYNLSH/Bx9tNhHf7Zf5wM9UY/YxGeTfcY7+S2wy; slave_sid=d01UcE84TkZreDdBOFB5aldTOFoyelZISkdranpqcnA0d3dQZXBlc0NmS1JmaFBRWHdrZUtqcjRFeFlYUFczUUlDYlhVR1lQMTdfOXZ4R1ZzdkVNc0RCSTVlRUFVSzg4YmwzbG9rWjFyQ0dSQWI4MTVoZlJtOFZIcTZFektBbkVYWGVLeUN1NW8wbnhGS25I; slave_user=gh_a2f9f4eb3766; xid=d50f408499b07d9dfeaaabed2305ba7c"
 		}
 	};
 	https.get(option, function(res) {
@@ -133,51 +102,35 @@ app.get('/wx', function(req, res, next) {
 			chunks.push(chunk);
 		})
 		res.on('end', function() {
-			console.log(Buffer.concat(chunks).toString());
+			var data = Buffer.concat(chunks).toString();
+			console.log(data);
+			callback(data);
 		})
 	})
+}
+
+// 微信爬虫
+app.get('/wx', function(req, res, next) {
+	var items = [];
+	var page = 10;
 	
+	for (var i = 0; i < page; i++) {
+		getWeixinList(i, function(item) {
+			items.push(JSON.parse(item));
+		});
+	}
 	
-//	// 用 superagent 去抓取“微信”的内容
-//	superagent.get('https://mp.weixin.qq.com/cgi-bin/appmsg?token=2052806918&lang=zh_CN&f=json&ajax=1&random=0.7998929288148617&action=list_ex&begin=0&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9')
-//		.end(function(err, sres) {
-//			// 常规的错误处理
-//			if(err) {
-//				return next(err);
-//			}
-//			// sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后
-//			// 就可以得到一个实现了 jquery 接口的变量，我们习惯性地将它命名为 `$`
-//			// 剩下就都是 jquery 的内容了
-//			var $ = cheerio.load(sres.text);
-//			var items = [];
-//			var item = new Object();
-//			console.log(sres.text);
-//			
-//			$('#activity-name').each(function(idx, element){
-//				var $element = $(element);
-//				item['activity-name'] = $element.text().replace(/\n\s+/g, '');
-//			});
-//			$('mpvoice').each(function(idx, element){
-//				var $element = $(element);
-//				item['mpvoice'] = $element.attr('name').replace(/\s+/g, '');
-//			});
-//			$('#js_name').each(function(idx, element){
-//				var $element = $(element);
-//				item['js_name'] = $element.text().replace(/\s+/g, '');
-//			});
-//			$('#publish_time').each(function(idx, element){
-//				var $element = $(element);
-//				item['publish_time'] = $element.text().replace(/\n\s+/g, '');
-//			});
-//			$('section:contains("早安")').each(function(idx, element){
-//				var $element = $(element);
-//				item['text'] = $element.text().replace(/\s+/g, '');
-//			});
-//			console.log(item);
-//			items.push(item);
-//			res.send(items);
-//		});
+	var t = 1;
+	var timeer = setInterval(function() {
+		if(items && items.length >= page) {
+			res.send(items);
+			clearInterval(timeer);
+		} else {
+			console.log("当前数量:%s, 耗时:%ss", items.length, t++);
+		}
+	}, 1000);
 });
+
 
 var server = app.listen(3000, function() {
 	var host = server.address().address;
