@@ -1,0 +1,24 @@
+{
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "网页爬虫",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lijian17/WebCrawler.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "爬虫"
+  ],
+  "author": "深情小建",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lijian17/WebCrawler/issues"
+  },
+  "homepage": "https://github.com/lijian17/WebCrawler#readme"
+}
