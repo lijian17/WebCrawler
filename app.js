@@ -2,6 +2,9 @@
 var express = require('express');
 var app = express();
 
+// 静态文件路径设置
+app.use('/static', express.static('static'));
+
 // 主页输出 "Hello World"
 app.get('/', function(req, res){
 	res.send('Hello World');
