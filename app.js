@@ -112,21 +112,21 @@ var getWeixinList = function(begin, callback){
 // 微信爬虫
 app.get('/wx', function(req, res, next) {
 	var items = [];
+	var page = 10;
 	
-	for (var i = 0; i < 10; i++) {
-		setTimeout(getWeixinList(i, function(item){
+	for (var i = 0; i < page; i++) {
+		getWeixinList(i, function(item) {
 			items.push(JSON.parse(item));
-		}), 500);
+		});
 	}
 	
 	var t = 1;
-	var timeer = setInterval(function(){
-		if (items && items.length > 9) {
+	var timeer = setInterval(function() {
+		if(items && items.length >= page) {
 			res.send(items);
 			clearInterval(timeer);
 		} else {
-			console.log(items.length);
-			console.log("时间：" + t++);
+			console.log("当前数量:%s, 耗时:%ss", items.length, t++);
 		}
 	}, 1000);
 });
