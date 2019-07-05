@@ -7,6 +7,7 @@ var http = require('http');
 var https = require('https');
 var querystring = require('querystring');
 var util = require('util');
+var fs = require('fs');
 
 var app = express();
 
@@ -112,25 +113,75 @@ var getWeixinList = function(begin, callback){
 // 微信爬虫
 app.get('/wx', function(req, res, next) {
 	var items = [];
-	var page = 10;
-	
-	for (var i = 0; i < page; i++) {
-		getWeixinList(i, function(item) {
-			items.push(JSON.parse(item));
-		});
-	}
-	
-	var t = 1;
-	var timeer = setInterval(function() {
-		if(items && items.length >= page) {
+	var page = 262 * 5;
+	var begin = 0;
+	var t = 0;
+
+	function polling() {
+		if(begin >= page) {
+			console.log("已完成！数量:%s, 耗时:%ss", items.length, t++);
+			fs.writeFile('input.json', JSON.stringify(items), function(err) {
+				if(err) {
+					return console.error(err);
+				}
+			});
 			res.send(items);
-			clearInterval(timeer);
-		} else {
-			console.log("当前数量:%s, 耗时:%ss", items.length, t++);
+			return;
 		}
-	}, 1000);
+		setTimeout(function() {
+			getWeixinList(begin, function(item) {
+				fs.appendFile('input2.json', item, function(err) {
+					if(err) return console.log("追加文件失败" + err.message);
+					console.log("追加成功");
+				});
+				console.log("当前数量:%s, 耗时:%ss", items.length, t++);
+				begin += 5;
+				items.push(JSON.parse(item));
+				polling();
+			});
+		}, 1000);
+	}
+	polling();
 });
 
+function exct() {
+	var items = [];
+	var page = 262 * 5;
+	var begin = 0;
+	var t = 0;
+
+	fs.unlink('input2.json', function(err) {
+		if(err) return console.error(err)
+	});
+	function polling() {
+		if(begin >= page) {
+			console.log("已完成！数量:%s, 耗时:%ss", items.length, t++);
+			fs.unlink('input.json', function(err) {
+				if(err) return console.error(err)
+			});
+			fs.writeFile('input.json', JSON.stringify(items), function(err) {
+				if(err) {
+					return console.error(err);
+				}
+			});
+			return;
+		}
+		setTimeout(function() {
+			getWeixinList(begin, function(item) {
+				fs.appendFile('input2.json', item, function(err) {
+					if(err) return console.log("追加文件失败" + err.message);
+					console.log("追加成功");
+				});
+				console.log("当前数量:%s, 耗时:%ss", items.length, t++);
+				begin += 5;
+				items.push(JSON.parse(item));
+				polling();
+			});
+		}, 10000);
+	}
+	polling();
+}
+exct();
 
 var server = app.listen(3000, function() {
 	var host = server.address().address;
