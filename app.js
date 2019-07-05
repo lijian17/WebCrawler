@@ -150,6 +150,24 @@ app.get('/wx', function(req, res, next) {
 	polling();
 });
 
+// 获取微信详情页数据
+function getWeixinListResult(){
+	fs.readFile('weixin-list-result.json', function(err, data){
+		if(err) return console.error('文件读取错误：' + err);
+		var begin = 0;
+		var t = 0;
+		var len = 0;
+		
+		data = JSON.parse(data);
+		if(!data || data.length <= 0){
+			console.error('数据异常');
+		}
+		len = data.length;
+		
+		
+	});
+}
+
 function exct() {
 	var items = [];
 	var page = 262 * 5;
