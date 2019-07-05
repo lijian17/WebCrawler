@@ -86,15 +86,18 @@ app.get('/weixin', function(req, res, next) {
 var getWeixinList = function(begin, callback){
 	var url = 'https://mp.weixin.qq.com/cgi-bin/appmsg?token=2052806918&lang=zh_CN&f=json&ajax=1&random=0.7998929288148617&action=list_ex&begin=0&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
 	var hostname = 'mp.weixin.qq.com';
-	var path = '/cgi-bin/appmsg?token=149910836&lang=zh_CN&f=json&ajax=1&random=0.8699264633810757&action=list_ex&begin='+ begin +'&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
+//	var path = '/cgi-bin/appmsg?token=149910836&lang=zh_CN&f=json&ajax=1&random=0.8699264633810757&action=list_ex&begin='+ begin +'&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
+	
+	var path = '/cgi-bin/appmsg?token=994306359&lang=zh_CN&f=json&ajax=1&random=0.7602511725668888&action=list_ex&begin='+ begin +'&count=5&query=&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
+	
 	var option = {
 		hostname: 'mp.weixin.qq.com',
 		path: path,
 		headers: {
 			"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
 			"host": "mp.weixin.qq.com",
-			"referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=10&isMul=1&isNew=1&lang=zh_CN&token=149910836",
-			"cookie": "RK=cQVjT+zMcr; pgv_pvi=8529025024; tvfe_boss_uuid=d6881ac330f75442; ts_uid=5065673543; ua_id=7ZofPklMEuUns7x5AAAAACIAT90E2NToqpBzgDvSe8o=; pgv_pvid=4301079240; ptcz=6ea1f4cdf1eaa13248dbbdf027662fae2ff03e43df172559e4e4a01f3d5794dd; mm_lang=zh_CN; qb_qua=; qb_guid=81fb8423fe034e4f8211d2af13129866; Q-H5-GUID=81fb8423fe034e4f8211d2af13129866; NetType=; o_cookie=374452668; pac_uid=1_374452668; noticeLoginFlag=1; openid2ticket_otDr0jlpT8m__Hae_7qI1d_3iy-4=CabEVpTPnGyMM3GGCJa2kOTn2tMrMaUyoJlH5E1jmps=; remember_acct=913735050%40qq.com; openid2ticket_oLMz854x7C6AgL995qqa_JRlv03w=S6Rj03P/okk8o8CwCln73CrwGVwN6ekUvClp+HSuqWw=; pgv_si=s8812719104; uuid=cad67fe41f6bc61dab704a9cab8b5611; data_bizuin=2398370484; bizuin=2398371314; data_ticket=HCsb0M2qgTq8MbQx56bChBwDYUYNLSH/Bx9tNhHf7Zf5wM9UY/YxGeTfcY7+S2wy; slave_sid=d01UcE84TkZreDdBOFB5aldTOFoyelZISkdranpqcnA0d3dQZXBlc0NmS1JmaFBRWHdrZUtqcjRFeFlYUFczUUlDYlhVR1lQMTdfOXZ4R1ZzdkVNc0RCSTVlRUFVSzg4YmwzbG9rWjFyQ0dSQWI4MTVoZlJtOFZIcTZFektBbkVYWGVLeUN1NW8wbnhGS25I; slave_user=gh_a2f9f4eb3766; xid=d50f408499b07d9dfeaaabed2305ba7c"
+			"referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=10&isMul=1&isNew=1&lang=zh_CN&token=994306359",
+			"cookie": "noticeLoginFlag=1; remember_acct=c54dxs%40163.com; pgv_pvid=9290460692; pgv_pvi=9613647872; ua_id=NJPiozYEeMSChFG0AAAAABR7pnosN-xmPSiM0Gym4Xg=; ts_uid=589866628; pt2gguin=o0374452668; RK=nYQhC8zlNr; ptcz=c76646d6ce5a0fb11009f4a6f33407e98950d97df82c0a4beeaed95c5c779e0c; noticeLoginFlag=1; mm_lang=zh_CN; o_cookie=374452668; pac_uid=1_374452668; rewardsn=; wxtokenkey=777; pgv_si=s269601792; cert=VAwe1H9YD8xusNzXyp4WsreJVmJcYL55; remember_acct=c54dxs%40163.com; ticket_id=gh_a2f9f4eb3766; uuid=921e088e46b30253eda618a64883fd4b; ticket=4bec8212a46697f633ad9140a515487beef0ecd1; data_bizuin=2398370484; bizuin=2398371314; data_ticket=1TKTwgewVN3xx/FjzSQJ3+qkiKllx8JS4mrKMpWZvOOH3BVs8pIy9BVOiEiXM+vM; slave_sid=djB0MkRVMDFxSjZEdUVvWWtKTmZ6TFRpTDJhQl8xMl95ZWxJNFJhQnBsbVZKMVg4Vk1BRG1oYjdROWwzSVc0WndyRlVtWE5KZ2hmVEttVk5sYUVkVzdPNXZWMTZRNm0zbFhNN1BYWGE3UEk3YThrN0RCWmhYMzU5aDEwRm15VXlKRG03YXlsV2d5UFNyRUxZ; slave_user=gh_a2f9f4eb3766; xid=61e66a2029db8a23eea7c757c5595eef; openid2ticket_otDr0jlpT8m__Hae_7qI1d_3iy-4=O+rLgFMPYO4vhlR7EChhBP0bWOUL0cdwSKwca7+1TAk="
 		}
 	};
 	https.get(option, function(res) {
@@ -107,13 +110,16 @@ var getWeixinList = function(begin, callback){
 			console.log(data);
 			callback(data);
 		})
+	}).on('error', function(err){
+		console.error('\n\n\n请求出错：' + JSON.stringify(err) + '\n\n\n');
+		setTimeout(function(){callback(JSON.stringify(err))}, 10000);
 	})
 }
 
 // 微信爬虫
 app.get('/wx', function(req, res, next) {
 	var items = [];
-	var page = 262 * 5;
+	var page = 400 * 5;
 	var begin = 0;
 	var t = 0;
 
@@ -134,9 +140,9 @@ app.get('/wx', function(req, res, next) {
 					if(err) return console.log("追加文件失败" + err.message);
 					console.log("追加成功");
 				});
-				console.log("当前数量:%s, 耗时:%ss", items.length, t++);
 				begin += 5;
 				items.push(JSON.parse(item));
+				console.log("当前数量:%s, 耗时:%ss", items.length, ++t);
 				polling();
 			});
 		}, 1000);
@@ -168,7 +174,7 @@ function exct() {
 		}
 		setTimeout(function() {
 			getWeixinList(begin, function(item) {
-				fs.appendFile('input2.json', item, function(err) {
+				fs.appendFile('input2.json', item + ',', function(err) {
 					if(err) return console.log("追加文件失败" + err.message);
 					console.log("追加成功");
 				});
