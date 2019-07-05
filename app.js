@@ -156,14 +156,29 @@ function exct() {
 	var begin = 0;
 	var t = 0;
 
-	fs.unlink('input2.json', function(err) {
-		if(err) return console.error(err)
+	fs.writeFile('input2.json', '[', function(err) {
+		if(err) {
+			return console.error(err);
+		}
+	});
+
+	fs.writeFile('error.json', '[', function(err) {
+		if(err) {
+			return console.error(err);
+		}
 	});
 	function polling() {
 		if(begin >= page) {
-			console.log("已完成！数量:%s, 耗时:%ss", items.length, t++);
-			fs.unlink('input.json', function(err) {
-				if(err) return console.error(err)
+			console.log("已完成！数量:%s, 耗时:%ss", items.length, ++t);
+			fs.appendFile('input2.json', ']', function(err) {
+				if(err) {
+					return console.error(err);
+				}
+			});
+			fs.appendFile('error.json', ']', function(err) {
+				if(err) {
+					return console.error(err);
+				}
 			});
 			fs.writeFile('input.json', JSON.stringify(items), function(err) {
 				if(err) {
@@ -174,16 +189,26 @@ function exct() {
 		}
 		setTimeout(function() {
 			getWeixinList(begin, function(item) {
-				fs.appendFile('input2.json', item + ',', function(err) {
-					if(err) return console.log("追加文件失败" + err.message);
-					console.log("追加成功");
-				});
-				console.log("当前数量:%s, 耗时:%ss", items.length, t++);
-				begin += 5;
-				items.push(JSON.parse(item));
-				polling();
+				var resultJson = JSON.parse(item);
+				if(resultJson && resultJson.base_resp && resultJson.base_resp.err_msg && resultJson.base_resp.err_msg == 'ok') {
+					fs.appendFile('input2.json', item + ',\r\n', function(err) {
+						if(err) return console.log("追加文件失败" + err.message);
+						console.log("追加成功");
+					});
+					console.log("当前数量:%s, 耗时:%ss", items.length, ++t);
+					begin += 5;
+					items.push(JSON.parse(item));
+					polling();
+				} else {
+					fs.appendFile('error.json', item + ',\r\n', function(err) {
+						if(err) return console.log("追加文件失败" + err.message);
+						console.log("追加成功");
+					});
+					console.log("当前数量:%s, 耗时:%ss", items.length, ++t);
+					polling();
+				}
 			});
-		}, 10000);
+		}, 1000);
 	}
 	polling();
 }
