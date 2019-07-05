@@ -126,7 +126,7 @@ app.get('/wx', function(req, res, next) {
 	function polling() {
 		if(begin >= page) {
 			console.log("已完成！数量:%s, 耗时:%ss", items.length, t++);
-			fs.writeFile('input.json', JSON.stringify(items), function(err) {
+			fs.writeFile('weixin-list-result.json', JSON.stringify(items), function(err) {
 				if(err) {
 					return console.error(err);
 				}
@@ -136,7 +136,7 @@ app.get('/wx', function(req, res, next) {
 		}
 		setTimeout(function() {
 			getWeixinList(begin, function(item) {
-				fs.appendFile('input2.json', item, function(err) {
+				fs.appendFile('weixin-list.json', item, function(err) {
 					if(err) return console.log("追加文件失败" + err.message);
 					console.log("追加成功");
 				});
@@ -156,13 +156,13 @@ function exct() {
 	var begin = 0;
 	var t = 0;
 
-	fs.writeFile('input2.json', '[', function(err) {
+	fs.writeFile('weixin-list.json', '[', function(err) {
 		if(err) {
 			return console.error(err);
 		}
 	});
 
-	fs.writeFile('error.json', '[', function(err) {
+	fs.writeFile('weixin-list-error.json', '[', function(err) {
 		if(err) {
 			return console.error(err);
 		}
@@ -170,17 +170,17 @@ function exct() {
 	function polling() {
 		if(begin >= page) {
 			console.log("已完成！数量:%s, 耗时:%ss", items.length, ++t);
-			fs.appendFile('input2.json', ']', function(err) {
+			fs.appendFile('weixin-list.json', ']', function(err) {
 				if(err) {
 					return console.error(err);
 				}
 			});
-			fs.appendFile('error.json', ']', function(err) {
+			fs.appendFile('weixin-list-error.json', ']', function(err) {
 				if(err) {
 					return console.error(err);
 				}
 			});
-			fs.writeFile('input.json', JSON.stringify(items), function(err) {
+			fs.writeFile('weixin-list-result.json', JSON.stringify(items), function(err) {
 				if(err) {
 					return console.error(err);
 				}
@@ -191,7 +191,7 @@ function exct() {
 			getWeixinList(begin, function(item) {
 				var resultJson = JSON.parse(item);
 				if(resultJson && resultJson.base_resp && resultJson.base_resp.err_msg && resultJson.base_resp.err_msg == 'ok') {
-					fs.appendFile('input2.json', item + ',\r\n', function(err) {
+					fs.appendFile('weixin-list.json', item + ',\r\n', function(err) {
 						if(err) return console.log("追加文件失败" + err.message);
 						console.log("追加成功");
 					});
@@ -200,7 +200,7 @@ function exct() {
 					items.push(JSON.parse(item));
 					polling();
 				} else {
-					fs.appendFile('error.json', item + ',\r\n', function(err) {
+					fs.appendFile('weixin-list-error.json', item + ',\r\n', function(err) {
 						if(err) return console.log("追加文件失败" + err.message);
 						console.log("追加成功");
 					});
