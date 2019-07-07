@@ -1,5 +1,4 @@
 // 入口文件
-var express = require('express');
 var superagent = require('superagent');
 var cheerio = require('cheerio');
 
@@ -9,122 +8,8 @@ var querystring = require('querystring');
 var util = require('util');
 var fs = require('fs');
 
-var app = express();
 
-// 静态文件路径设置
-app.use('/static', express.static(__dirname + '/static'));
-
-app.get('/', function(req, res, next) {
-	// 用 superagent 去抓取 https://cnodejs.org/ 的内容
-	superagent.get('https://cnodejs.org/')
-		.end(function(err, sres) {
-			// 常规的错误处理
-			if(err) {
-				return next(err);
-			}
-			// sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后
-			// 就可以得到一个实现了 jquery 接口的变量，我们习惯性地将它命名为 `$`
-			// 剩下就都是 jquery 的内容了
-			var $ = cheerio.load(sres.text);
-			var items = [];
-			$('#topic_list .topic_title').each(function(idx, element) {
-				var $element = $(element);
-				items.push({
-					title: $element.attr('title'),
-					href: $element.attr('href')
-				});
-			});
-			res.send(items);
-		});
-});
-
-// 微信爬虫
-app.get('/weixin', function(req, res, next) {
-	// 用 superagent 去抓取“微信”的内容
-	var url = 'http://mp.weixin.qq.com/s?__biz=MjM5MjAxNDM4MA==&mid=2666258190&idx=1&sn=fab85cf2f26ad1513c376a37b97eefe0&chksm=bdb3b64d8ac43f5b7c34fcf9fad33925f5c11be3f9412acf5290c3d2c40beb9a935df297134d#rd'
-//	var url = 'https://mp.weixin.qq.com/s/hcnFHhlzorK8l6JCLiaAPw';
-	superagent.get(url)
-		.end(function(err, sres) {
-			// 常规的错误处理
-			if(err) {
-				return next(err);
-			}
-			// sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后
-			// 就可以得到一个实现了 jquery 接口的变量，我们习惯性地将它命名为 `$`
-			// 剩下就都是 jquery 的内容了
-			var $ = cheerio.load(sres.text);
-			var items = [];
-			var item = new Object();
-//			console.log(sres.text);
-			
-			$('#activity-name').each(function(idx, element){
-				var $element = $(element);
-				item['activity-name'] = $element.text().replace(/\n\s+/g, '');
-			});
-			$('mpvoice').each(function(idx, element){
-				var $element = $(element);
-				item['mpvoice'] = $element.attr('name').replace(/\s+/g, '');
-			});
-			$('#js_name').each(function(idx, element){
-				var $element = $(element);
-				item['js_name'] = $element.text().replace(/\s+/g, '');
-			});
-			$('#publish_time').each(function(idx, element){
-				var $element = $(element);
-				item['publish_time'] = $element.text().replace(/\n\s+/g, '');
-			});
-			$('section:contains("早安")').each(function(idx, element){
-				var $element = $(element);
-				item['text'] = $element.text().replace(/\s+/g, '');
-			});
-			$('script:contains("\",s=\"")').each(function(idx, element){
-				var $element = $(element);
-				var time = $element[0].children[0].data;
-				var index = time.indexOf('",s="');
-				console.log(time.substr(index + 5, 10));
-				item['time'] = time.substr(index + 5, 10);
-			});
-			console.log(item);
-			items.push(item);
-			res.send(items);
-		});
-});
-
-// 微信爬虫
-app.get('/wx', function(req, res, next) {
-	var items = [];
-	var page = 400 * 5;
-	var begin = 0;
-	var t = 0;
-
-	function polling() {
-		if(begin >= page) {
-			console.log("已完成！数量:%s, 耗时:%ss", items.length, t++);
-			fs.writeFile('weixin-list-result.json', JSON.stringify(items), function(err) {
-				if(err) {
-					return console.error(err);
-				}
-			});
-			res.send(items);
-			return;
-		}
-		setTimeout(function() {
-			getWeixinList(begin, function(item) {
-				fs.appendFile('weixin-list.json', item, function(err) {
-					if(err) return console.log("追加文件失败" + err.message);
-					console.log("追加成功");
-				});
-				begin += 5;
-				items.push(JSON.parse(item));
-				console.log("当前数量:%s, 耗时:%ss", items.length, ++t);
-				polling();
-			});
-		}, 1000);
-	}
-	polling();
-});
-
-var getWeixinList = function(begin, callback){
+function getWeixinList(begin, callback){
 	var url = 'https://mp.weixin.qq.com/cgi-bin/appmsg?token=2052806918&lang=zh_CN&f=json&ajax=1&random=0.7998929288148617&action=list_ex&begin=0&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
 	var hostname = 'mp.weixin.qq.com';
 //	var path = '/cgi-bin/appmsg?token=149910836&lang=zh_CN&f=json&ajax=1&random=0.8699264633810757&action=list_ex&begin='+ begin +'&count=5&query=%E6%9D%A5%E4%BA%86%EF%BC%81%E6%96%B0%E9%97%BB%E6%97%A9%E7%8F%AD%E8%BD%A6&fakeid=MjM5MjAxNDM4MA%3D%3D&type=9';
@@ -373,10 +258,3 @@ function exct() {
 }
 //exct();
 getWeixinListResult();
-
-var server = app.listen(3000, function() {
-	var host = server.address().address;
-	var port = server.address().port;
-
-	console.log('应用实例，访问地址为 http://%s:%s', host, port);
-})
